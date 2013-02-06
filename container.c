@@ -58,13 +58,13 @@
 struct set_containerid_args {
 
        int idnum; 
-     pid_t pid;
+       pid_t pid;
 };
 
 struct create_container_args { 
 
        int perms;
-	   char *name;
+       char *name;
 };
 
 struct destroy_container_args {
@@ -75,15 +75,15 @@ struct destroy_container_args {
 struct write_container_args {
 
        char *name;
-	   char *message;
-	   int len;
+       char *message;
+       int len;
 };
 
 struct read_container_args {
 
        char *name;
-	   char *message;
-	   int len;
+       char *message;
+       int len;
 
 };
 
@@ -190,31 +190,31 @@ sys_create_container(struct thread *td, struct create_container_args *uap)
 	 copystr(kern_name,Container_head->name,256,NULL);
 	 //strcpy(Container_head->name,kern_name);
 	 Container_head->data = NULL;
-     Container_head->next = NULL;
+         Container_head->next = NULL;
 	 Container_head->uid = td->td_ucred->cr_ruid;
-     Container_head->ctid = td->td_proc->p_containerid; 
+         Container_head->ctid = td->td_proc->p_containerid; 
 	 Container_head->perms = uap->perms;
 	 Container_head->msgstate = 0;
 	 Container_head->currenMsgred = 0;
 	 Container_head->read_wchan = malloc(255, M_NODE, M_NOWAIT);
-     Container_head->write_wchan = malloc(255, M_NODE, M_NOWAIT);
+         Container_head->write_wchan = malloc(255, M_NODE, M_NOWAIT);
    }
    else //add to the end
    {
-      cursor = Container_head;
+          cursor = Container_head;
 	  prev = Container_head;
 	  
 	  while(cursor != NULL)
-     {
-	   if( strcmp(cursor->name,kern_name) == 0 && (cursor->ctid == td->td_proc->p_containerid) )
        {
+	   if( strcmp(cursor->name,kern_name) == 0 && (cursor->ctid == td->td_proc->p_containerid) )
+           {
 	     mtx_unlock(&mutex);
 	     return EEXIST;//Error: Name already existed.
 	   }	   
 	   
 	   prev = cursor;
 	   cursor = cursor->next;
-     }
+       }
 	  
 	  Newnode = malloc(sizeof(struct node), M_NODE, M_NOWAIT);
 	  prev->next = Newnode;  
@@ -224,13 +224,13 @@ sys_create_container(struct thread *td, struct create_container_args *uap)
 	  //strcpy(Newnode->name,kern_name);
 	  Newnode->data = NULL;
 	  Newnode->next = NULL;
-      Newnode->uid = td->td_ucred->cr_ruid;
-      Newnode->ctid = td->td_proc->p_containerid; 
+          Newnode->uid = td->td_ucred->cr_ruid;
+          Newnode->ctid = td->td_proc->p_containerid; 
 	  Newnode->perms = uap->perms;
 	  Newnode->msgstate = 0;
 	  Newnode->currenMsgred = 0;
 	  Newnode->read_wchan = malloc(255, M_NODE, M_NOWAIT);
-      Newnode->write_wchan = malloc(255, M_NODE, M_NOWAIT);
+          Newnode->write_wchan = malloc(255, M_NODE, M_NOWAIT);
    }
   
     mtx_unlock(&mutex);
@@ -387,8 +387,6 @@ sys_write_container(struct thread *td, struct write_container_args *uap)
 	
   }
   
-  
- 
   writenode->data = malloc(256, M_NODE, M_NOWAIT);
   bzero(writenode->data,256);
   copystr(kern_msg,writenode->data,uap->len,NULL);
@@ -468,12 +466,6 @@ sys_read_container(struct thread *td, struct read_container_args *uap)
   
   wakeup(readnode->write_wchan);
   
-  /*
-  if(readnode->msgstate == 2)
-  {
-    
-  }
-  */
   mtx_unlock(&mutex);
  
   return 0;
