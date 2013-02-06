@@ -1,3 +1,5 @@
+/*Access List Control*/
+
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/bio.h>
@@ -26,25 +28,25 @@
 
 struct setacl_args {
 
-       char *name;
+     char *name;
      int type;//0-user,1-group.
-	   int idnum;//user id number or group id number.
-	   int perms;//"rwx"
+     int idnum;//user id number or group id number.
+     int perms;//"rwx"
 };
 
 struct clearacl_args {
 
        char *name;
-	   int type;//0-user,1-group.
-	   int idnum;//user id number or group id number.
+       int type;//0-user,1-group.
+       int idnum;//user id number or group id number.
 	  
 };
 
 struct getacl_args {
 
        char *name;
-	   int type;//0-user,1-group.
-	   int idnum;//user id number or group id number.
+       int type;//0-user,1-group.
+       int idnum;//user id number or group id number.
 	  
 };
 
@@ -76,7 +78,7 @@ sys_setacl(struct thread *td, struct setacl_args *uap)
 	  return 0;
 	}
 	
-    struct myfs_inode *ip = MYFS_VTOI(nd.ni_vp);
+        struct myfs_inode *ip = MYFS_VTOI(nd.ni_vp);
 	
 	//User entry
 	if(uap->type == 0)
@@ -150,7 +152,7 @@ sys_setacl(struct thread *td, struct setacl_args *uap)
 int
 sys_clearacl(struct thread *td, struct clearacl_args *uap)
 {
-    int error;
+        int error;
 	struct nameidata nd;
 	int index = -1;
 	int i,j;
@@ -223,7 +225,7 @@ sys_clearacl(struct thread *td, struct clearacl_args *uap)
 		if(index != -1)
 		{
 			dip->group_entry[index].idnum = 0;
-		    dip->group_entry[index].perms = 0;
+		        dip->group_entry[index].perms = 0;
 			dip->group_cnt--;
 			
 			 //Adjust the group access control list.
@@ -253,7 +255,7 @@ sys_clearacl(struct thread *td, struct clearacl_args *uap)
 int
 sys_getacl(struct thread *td, struct getacl_args *uap)
 {
-    int error;
+        int error;
 	struct nameidata nd;
 	int perms = -1;
 	int whetherintable = 0;
@@ -334,7 +336,7 @@ entry_find(struct myfs_ufs2_dinode *dip,int type,int idnum)
     {
 		if( dip->user_entry[i].idnum == idnum)
 		{
-	       return dip->user_entry[i].perms;
+	       	    return dip->user_entry[i].perms;
 		}
 	}
 	
@@ -346,7 +348,7 @@ entry_find(struct myfs_ufs2_dinode *dip,int type,int idnum)
 	{
 		if(dip->group_entry[j].idnum == idnum)
 		{
-	       return dip->group_entry[j].perms;
+	       	   return dip->group_entry[j].perms;
 		}	
 	}
 	
