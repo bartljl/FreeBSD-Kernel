@@ -64,7 +64,7 @@ string_close(struct cdev *dev, int flag, int mode, struct thread *td)
 static int
 string_read(struct cdev *dev, struct uio *uio, int flags)
 {
-  char *ptr;
+  	char *ptr;
 	char Msg[50];
 	char tmp[50];
 
@@ -80,7 +80,7 @@ string_read(struct cdev *dev, struct uio *uio, int flags)
 	   while(tmp[i] != 0)
 	   {
 	     tmp[i] = toupper(tmp[i]);
-         i++;
+	     i++;
 	   }
 		
 		copystr(tmp,Msg,50,NULL);
@@ -111,7 +111,7 @@ string_write(struct cdev *dev, struct uio *uio, int flags)
 {
 	int error = 0;
    
-    mtx_lock(&mutex);
+   	mtx_lock(&mutex);
 
 	if(strlen(uio->uio_iov->iov_base) > 50)
 	{
